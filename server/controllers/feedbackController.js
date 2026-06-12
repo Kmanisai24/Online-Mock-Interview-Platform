@@ -25,7 +25,8 @@ ${answer}
 
 Evaluate the answer.
 
-Return:
+Return ONLY in this exact format:
+
 Score: X/10
 
 Feedback:
@@ -37,25 +38,46 @@ Feedback:
       contents: prompt,
     });
 
-    const feedback =
-      response.text || "No feedback generated.";
+    const text =
+      typeof response.text === "function"
+        ? response.text()
+        : response.text;
+
+    console.log("===== GEMINI RESPONSE =====");
+    console.log(text);
+    console.log("===========================");
+
+    const scoreMatch = String(text).match(
+      /(\d+)\/10/
+    );
+
+    const score = scoreMatch
+      ? Number(scoreMatch[1])
+      : 0;
+
+    const feedbackText = String(text)
+      .replace(/Score:\s*\d+\/10/i, "")
+      .replace(/Feedback:/i, "")
+      .trim();
 
     res.status(200).json({
       question,
       answer,
-      feedback,
+      score,
+      feedback: feedbackText,
     });
+
   } catch (error) {
     console.log("=================================");
     console.log("FEEDBACK AI ERROR");
-    console.log(error.message);
+    console.log(error);
     console.log("=================================");
 
     res.status(200).json({
       question: req.body.question,
       answer: req.body.answer,
-      feedback:
-        "Score: 7/10\n\nGood answer. Gemini AI is currently unavailable due to high demand. Please try again later.",
+      score: 0,
+      feedback: `AI evaluation failed: ${error.message}`,
     });
   }
 };

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../services/api";
 
 function InterviewGenerator() {
@@ -13,15 +14,19 @@ function InterviewGenerator() {
     }
 
     try {
-      const response = await api.post(
-        "/ai/generate",
-        {
-          role,
-          experience,
-        }
-      );
+      const response = await api.post("/ai/generate", {
+        role,
+        experience,
+      });
 
       setResult(response.data);
+
+      if (response.data.questions) {
+        localStorage.setItem(
+          "interviewQuestions",
+          JSON.stringify(response.data.questions)
+        );
+      }
     } catch (error) {
       console.error(error);
       alert("Failed to generate questions");
@@ -71,9 +76,7 @@ function InterviewGenerator() {
         type="text"
         placeholder="Experience (e.g. Fresher)"
         value={experience}
-        onChange={(e) =>
-          setExperience(e.target.value)
-        }
+        onChange={(e) => setExperience(e.target.value)}
         style={{
           width: "80%",
           padding: "10px",
@@ -109,27 +112,39 @@ function InterviewGenerator() {
               padding: 0,
             }}
           >
-            {result.questions?.map(
-              (question, index) => (
-                <li
-                  key={index}
-                  style={{
-                    marginBottom: "15px",
-                    padding: "15px",
-                    border: "1px solid #ddd",
-                    borderRadius: "10px",
-                    textAlign: "left",
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <strong>
-                    Q{index + 1}.
-                  </strong>{" "}
-                  {question}
-                </li>
-              )
-            )}
+            {result.questions?.map((question, index) => (
+              <li
+                key={index}
+                style={{
+                  marginBottom: "15px",
+                  padding: "15px",
+                  border: "1px solid #ddd",
+                  borderRadius: "10px",
+                  textAlign: "left",
+                  backgroundColor: "#f9f9f9",
+                }}
+              >
+                <strong>Q{index + 1}.</strong> {question}
+              </li>
+            ))}
           </ul>
+
+          <div style={{ marginTop: "20px" }}>
+            <Link to="/interview-session">
+              <button
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#16a34a",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                }}
+              >
+                Start Interview
+              </button>
+            </Link>
+          </div>
         </>
       )}
     </div>

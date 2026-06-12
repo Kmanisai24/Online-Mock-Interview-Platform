@@ -2,31 +2,37 @@ import { Link } from "react-router-dom";
 
 function Dashboard() {
   return (
-    <div
-      style={{
-        textAlign: "center",
-        padding: "40px",
-      }}
-    >
+    <div style={{ textAlign: "center", padding: "40px" }}>
       <h1>AI Mock Interview Platform</h1>
 
-      <h3>Features</h3>
+      <div style={{ marginTop: "30px" }}>
+        <p>
+          <Link to="/resume">Resume Upload</Link>
+        </p>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "15px",
-          alignItems: "center",
-        }}
-      >
-        <Link to="/resume">
-          Resume Upload
-        </Link>
+        <p>
+          <Link to="/interview-generator">
+            Interview Generator
+          </Link>
+        </p>
 
-        <Link to="/interview-generator">
-          AI Interview Generator
-        </Link>
+        <p>
+          <Link to="/interview-session">
+            Interview Session
+          </Link>
+        </p>
+
+        <p>
+          <Link to="/feedback">
+            AI Feedback
+          </Link>
+        </p>
+
+        <p>
+          <Link to="/report">
+            Final Report
+          </Link>
+        </p>
       </div>
     </div>
   );

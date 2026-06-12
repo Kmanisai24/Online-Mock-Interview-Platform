@@ -5,6 +5,6 @@ const {
   generateFeedback,
 } = require("../controllers/feedbackController");
 
-router.post("/", generateFeedback);
+router.post("/evaluate", generateFeedback);
 
 module.exports = router;
